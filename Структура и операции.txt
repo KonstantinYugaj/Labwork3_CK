@@ -54,10 +54,7 @@ struct uint2022_t {
 
 
         }
-        //for (int i = 0; i < 253; i++) {
-        //    std::cout << " " << (int)binpool[i] << "  " << i << "\n";
-        //c}
-
+        
     }
 
 
@@ -153,7 +150,7 @@ uint2022_t operator+(const uint2022_t& lhs, const uint2022_t& rhs) {
             mapb[counter] = tempb % 2;
             tempb /= 2;
         }
-        //std::cout << mapa[0] << mapa[1] << mapa[2] << mapa[3] << mapa[4] << mapa[5] << mapa[6] << mapa[7] << "";
+        << mapa[5] << mapa[6] << mapa[7] << "";
         write_temp = 1;
         for (int counter = 0; counter < 8; counter++) {
             result.binpool[gcounter / 8] += ((mapa[counter] + mapb[counter] + overload) % 2) * write_temp;
@@ -162,7 +159,7 @@ uint2022_t operator+(const uint2022_t& lhs, const uint2022_t& rhs) {
         }
         gcounter += 8;
     }
-    //std::cout << (int)result.binpool[0] <<" " << (int)result.binpool[1] ;
+    ] ;
     return result;
 }
 
@@ -243,12 +240,7 @@ while (c[length] == 0)
     result = from_uint(b);
     uint2022_t i = first;
     while (true) {
-        //std::cout << (int)i.binpool[0] << " " << temp << "\n";
-        if (i == temp) { break; }
-        //std::cout << i << " " << temp <<" " << (i == temp) << "\n";
-        //std::cout << temp2 << " " << i << "\n";
-        result = result + temp2;
-        i = i + one;
+        
     }
     return result;
     return uint2022_t();
