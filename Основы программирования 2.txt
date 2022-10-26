@@ -1,0 +1,27 @@
+#include <iostream>
+#include "Header.h"
+
+
+
+int main() {
+    setlocale(0, "");
+    uint2022_t value, value2, value3;
+    std::cout << "Введите два числа через Enter" << std::endl;
+    std::cin >> value >> value2;
+    std::cout << "Выберите операцию 1) +, 2) -, 3) *" << std::endl;
+    int n;
+    std::cin >> n;
+    if (n == 1) {
+        value3 = value + value2;
+        std::cout << value3;
+    }
+    if (n == 2) {
+        value3 = value - value2;
+        std::cout << value3;
+    }
+    if (n == 3) {
+        value3 = value * value2;
+        std::cout << value3;
+    }
+    return 0;
+}
