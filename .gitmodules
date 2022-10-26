@@ -1,0 +1,6 @@
+[submodule "Develop"]
+	path = Develop
+	url = https://github.com/KonstantinYugaj/Laba-2/branches
+[submodule "labwork3"]
+	path = labwork3
+	url = https://github.com/is-itmo-c-22/labwork-3-KonstantinYugaj
