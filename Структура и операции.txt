@@ -1,0 +1,255 @@
+
+#include <iostream>
+struct uint2022_t {
+    unsigned char binpool[253];
+
+    uint2022_t() {
+        for (int i = 0; i < 253; i++) {
+            binpool[i] = 0;
+        }
+
+    }
+    friend std::ostream& operator<<(std::ostream&, const uint2022_t&);
+
+
+
+    void tobinary(char charpool[]) {
+        int global_counter = -1;
+        bool flag_stop = false;
+        for (int i = 0; i < 253; i++) { binpool[i] = 0; }
+        while (!flag_stop) {
+            bool flag_zero = false;
+            int result = -1;
+            int overload = 0;
+            int old_overload = 0;
+
+
+
+            for (int i = 0; i < 609; i++) {
+                //std::cout << charpool[i];
+                if (charpool[i] > 57 || charpool[i] < 48) { result = overload / 10; continue; }
+                if (charpool[i] != '0' && (charpool[i] <= 57 && charpool[i] >= 48)) { flag_zero = true; }
+
+                if (flag_zero) {
+
+                    old_overload = overload;
+                    overload = 10 * ((charpool[i] + overload - 48) % 2);
+                    charpool[i] = ((charpool[i] + old_overload - 48) / 2) + 48;
+
+
+                }
+            }
+            //std::cout << "\n";
+            if (!flag_zero) { flag_stop = true; }
+            //for (int i = 0; i < 10; i++) { std::cout << charpool[i]; }
+            //std::cout << " "<<result<<"  -  "<<flag_stop<<"\n";
+            if (!flag_stop) {
+                global_counter++;
+                //std::cout << result << "    " << global_counter << "    ";
+                for (int kk = 0; kk < (global_counter % 8); kk++) { result = result * 2; }
+                binpool[global_counter / 8] += result;
+                // std::cout << result << "\n";
+
+            }
+
+
+        }
+        //for (int i = 0; i < 253; i++) {
+        //    std::cout << " " << (int)binpool[i] << "  " << i << "\n";
+        //c}
+
+    }
+
+
+
+
+};
+std::ostream& operator<< (std::ostream& os, const uint2022_t& oper) {
+    /*
+    int temp = 0;
+    for (int i = 0; i < 2; i++) {
+        temp = (int)oper.binpool[i];
+
+        for (int j = 0; j < 8; j++) {
+            os << (temp) % 2 << "";
+            temp=temp/ 2;
+        }
+        os << " ";
+    }*/
+
+    char mas[609];
+    for (int temp = 0; temp < 609; temp++) { mas[temp] = 48; }
+    for (int i = 252; i >= 0; i--) {
+        int mapa[8];
+        int tempa = oper.binpool[i];
+        for (int counter = 0; counter < 8; counter++) {
+            mapa[counter] = tempa % 2;
+            tempa /= 2;
+        }
+        int overload = 0;
+
+        for (int shag_in_bitmap = 7; shag_in_bitmap >= 0; shag_in_bitmap--) {
+            for (int j = 608; j >= 0; j--) {
+                mas[j] = ((int(mas[j]) - 48) * 2) + overload + 48;
+                if (j == 608) { mas[j] += mapa[shag_in_bitmap]; }
+                overload = ((mas[j] - 48) / 10);
+                mas[j] = ((int(mas[j]) - 48) % 10) + 48;
+            }
+        }
+    }
+    bool start_writing = false;
+    for (int i = 0; i < 609; i++) {
+        if (mas[i] != 48) { start_writing = true; }
+        if (start_writing) { os << mas[i]; }
+    }
+
+
+    return os;
+}
+
+
+std::istream& operator >> (std::istream& in, uint2022_t& oper) {
+    char temp_char_mass[609];
+    in >> temp_char_mass;
+    oper.tobinary(temp_char_mass);
+    return in;
+}
+
+uint2022_t from_uint(uint32_t i) {
+    char b[609];
+    uint32_t a = i;
+    for (int j = 1; j <= 10; j++) {
+        //std::cout << b[0] << b[1] << b[2] << b[3] << b[4] << b[5] << b[6] << b[7] << b[8] << b[9] << '\n';
+        b[10 - j] = ((a % 10) + 48);
+        a = a / 10;
+    }
+    uint2022_t c;
+    c.tobinary(b);
+    //std::cout << i<< " " << c<<'\n';
+    //std::cout << i <<" == " << (int) c.binpool[0] << '\n';
+    return c;
+}
+
+
+uint2022_t from_string(char* buff) {
+    uint2022_t a;
+    a.tobinary(buff);
+    return a;
+}
+
+uint2022_t operator+(const uint2022_t& lhs, const uint2022_t& rhs) {
+    uint2022_t result;
+    int gcounter = 0;
+    int write_temp = 1, tempa, tempb, overload = 0;
+    int mapa[8], mapb[8];
+    //std::cout << lhs << " " << rhs << "  \n";
+    while (gcounter < 2022) {
+        tempa = lhs.binpool[gcounter / 8];
+        tempb = rhs.binpool[gcounter / 8];
+
+        for (int counter = 0; counter < 8; counter++) {
+            mapa[counter] = tempa % 2;
+            tempa /= 2;
+            mapb[counter] = tempb % 2;
+            tempb /= 2;
+        }
+        //std::cout << mapa[0] << mapa[1] << mapa[2] << mapa[3] << mapa[4] << mapa[5] << mapa[6] << mapa[7] << "";
+        write_temp = 1;
+        for (int counter = 0; counter < 8; counter++) {
+            result.binpool[gcounter / 8] += ((mapa[counter] + mapb[counter] + overload) % 2) * write_temp;
+            overload = (mapa[counter] + mapb[counter] + overload) / 2;
+            write_temp *= 2;
+        }
+        gcounter += 8;
+    }
+    //std::cout << (int)result.binpool[0] <<" " << (int)result.binpool[1] ;
+    return result;
+}
+
+uint2022_t operator-(const uint2022_t& lhs, const uint2022_t& rhs) {
+
+    uint2022_t reversed;
+    int temp;
+    int write_num = 1;
+    for (int i = 0; i < 253; i++)
+    {
+        write_num = 1;
+        temp = rhs.binpool[i];
+        for (int j = 0; j < 8; j++)
+        {
+            reversed.binpool[i] += (!(temp % 2)) * write_num;
+            temp /= 2;
+            write_num *= 2;
+
+        }
+
+
+    }
+    //std::cout << (int)rhs.binpool[0] << " " << (int)reversed.binpool[0] << "\n";
+    uint32_t a = 1;
+    reversed = reversed + (from_uint(a));
+
+
+    return lhs + reversed;
+}
+bool operator!=(const uint2022_t& lhs, const uint2022_t& rhs) {
+    int gcounter = -1;
+    int counter = 0;
+    while (gcounter < 252) {
+        gcounter += 1;
+        if (lhs.binpool[gcounter] == rhs.binpool[gcounter]) { counter++; };
+    }
+    if (counter == 253) { return false; };
+
+    return true;
+}
+
+bool operator==(const uint2022_t& lhs, const uint2022_t& rhs) {
+    int gcounter = -1;
+    int counter = 0;
+    while (gcounter < 252) {
+        gcounter += 1;
+        //std::cout <<gcounter <<" " << (int)lhs.binpool[gcounter] << " " << (int)rhs.binpool[gcounter] << "\n";
+        if (lhs.binpool[gcounter] == rhs.binpool[gcounter]) { counter++; };
+    }
+    //std::cout << lhs << " " << rhs << " " << counter << "\n";
+    if (counter == 253) { return true; };
+
+    return false;
+}
+uint2022_t operator*(const uint2022_t& lhs, const uint2022_t& rhs) {
+    /*length = size_a + size_b + 1;
+
+for (int ix = 0; ix < size_a; ix++)
+    for (int jx = 0; jx < size_b; jx++)
+        c[ix + jx - 1] += a[ix] * b[jx];
+
+for (int ix = 0; ix < length; ix++)
+{
+    c[ix + 1] +=  c[ix] / 10;
+    c[ix] %= 10;
+}
+
+while (c[length] == 0)
+    length-- ;*/
+
+    uint32_t a = 1;
+    uint32_t b = 0;
+    uint2022_t one, first;
+    one = from_uint(a);
+    first = from_uint(b);
+    uint2022_t temp = rhs, temp2 = lhs;
+    uint2022_t result;
+    result = from_uint(b);
+    uint2022_t i = first;
+    while (true) {
+        //std::cout << (int)i.binpool[0] << " " << temp << "\n";
+        if (i == temp) { break; }
+        //std::cout << i << " " << temp <<" " << (i == temp) << "\n";
+        //std::cout << temp2 << " " << i << "\n";
+        result = result + temp2;
+        i = i + one;
+    }
+    return result;
+    return uint2022_t();
+}
