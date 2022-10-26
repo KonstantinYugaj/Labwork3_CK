@@ -1,7 +1,75 @@
 #include <iostream>
 #include "Header.h"
 
+include <iostream>
+struct uint2022_t {
+    unsigned char binpool[253];
 
+    uint2022_t() {
+        for (int i = 0; i < 253; i++) {
+            binpool[i] = 0;
+        }
+
+    }
+    friend std::ostream& operator<<(std::ostream&, const uint2022_t&);
+
+
+
+    void tobinary(char charpool[]) {
+        int global_counter = -1;
+        bool flag_stop = false;
+        for (int i = 0; i < 253; i++) { binpool[i] = 0; }
+        while (!flag_stop) {
+            bool flag_zero = false;
+            int result = -1;
+            int overload = 0;
+            int old_overload = 0;
+
+
+
+            for (int i = 0; i < 609; i++) {
+                //std::cout << charpool[i];
+                if (charpool[i] > 57 || charpool[i] < 48) { result = overload / 10; continue; }
+                if (charpool[i] != '0' && (charpool[i] <= 57 && charpool[i] >= 48)) { flag_zero = true; }
+
+                if (flag_zero) {
+
+                    old_overload = overload;
+                    overload = 10 * ((charpool[i] + overload - 48) % 2);
+                    charpool[i] = ((charpool[i] + old_overload - 48) / 2) + 48;
+
+
+                }
+            }
+            //std::cout << "\n";
+            if (!flag_zero) { flag_stop = true; }
+            //for (int i = 0; i < 10; i++) { std::cout << charpool[i]; }
+            //std::cout << " "<<result<<"  -  "<<flag_stop<<"\n";
+            if (!flag_stop) {
+                global_counter++;
+                //std::cout << result << "    " << global_counter << "    ";
+                for (int kk = 0; kk < (global_counter % 8); kk++) { result = result * 2; }
+                binpool[global_counter / 8] += result;
+                // std::cout << result << "\n";
+
+            }
+
+
+        }
+        
+    }
+
+
+
+
+};
+std::ostream& operator<< (std::ostream& os, const uint2022_t& oper) {
+    /*
+    int temp = 0;
+    for (int i = 0; i < 2; i++) {
+        temp = (int)oper.binpool[i];
+
+        for (int j = 0; j < 8; j++) {
 
 int main() {
     setlocale(0, "");
