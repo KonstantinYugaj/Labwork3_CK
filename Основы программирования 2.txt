@@ -4,7 +4,7 @@
 
 
 int main() {
-    setlocale(0, "");
+    
     uint2022_t value, value2, value3;
     std::cout << "Введите два числа через Enter" << std::endl;
     std::cin >> value >> value2;
